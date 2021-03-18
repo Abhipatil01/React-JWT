@@ -5,18 +5,16 @@ const AuthContext = createContext();
 const { Provider } = AuthContext;
 
 const AuthProvider = ({ children }) => {
-	const token = localStorage.getItem('token');
 	const expiresAt = localStorage.getItem('expiresAt');
 	const userInfo = localStorage.getItem('userInfo');
 	const history = useHistory();
 	const [authState, setAuthState] = useState({
-		token,
+		token: null,
 		expiresAt,
 		userInfo: userInfo ? JSON.parse(userInfo) : {},
 	});
 
 	const setAuthInfo = ({ token, expiresAt, userInfo }) => {
-		localStorage.setItem('token', token);
 		localStorage.setItem('expiresAt', expiresAt);
 		localStorage.setItem('userInfo', JSON.stringify(userInfo));
 		setAuthState({
@@ -27,7 +25,6 @@ const AuthProvider = ({ children }) => {
 	};
 
 	const logout = () => {
-		localStorage.removeItem('token');
 		localStorage.removeItem('expiresAt');
 		localStorage.removeItem('userInfo');
 		setAuthState({
@@ -39,9 +36,9 @@ const AuthProvider = ({ children }) => {
 	};
 
 	const isAuthenticated = () => {
-		if (!authState.token || !authState.expiresAt) {
-			return false;
-		}
+		// if (!authState.token || !authState.expiresAt) {
+		// 	return false;
+		// }
 
 		return new Date().getTime() / 1000 < authState.expiresAt;
 	};
